@@ -1,0 +1,12 @@
+1
+1 
+set 1 1 8
+add 1 1 6
+min 1 1
+min 1 1
+min 1 1
+add 1 1 5
+add 1 1 7
+add 1 1 6
+set 1 1 6
+min 1 1

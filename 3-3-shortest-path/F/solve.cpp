@@ -41,17 +41,14 @@ int main() {
 	d[0] = 0;
 	for (int i = 0; i < n; ++i) {
 		x = -1;
-
 		for (int from = 0; from < n; ++from) {
 			for (int to = 0; to < n; ++to) {
 				int w = g[from][to];
 				if (w == inf) continue;
-				if (d[from] < inf) {
-					if (d[to] > d[from] + w) {
-						d[to] = max(-inf, d[from] + w);
-						p[to] = from;
-						x = to;
-					}
+				if (d[to] > d[from] + w) {
+					d[to] = max(-inf, d[from] + w);
+					p[to] = from;
+					x = to;
 				}
 			}
 		}

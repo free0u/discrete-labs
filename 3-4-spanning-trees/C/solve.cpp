@@ -79,8 +79,13 @@ int main() {
 
 	sort(edges.begin(), edges.end());
 
-	if (n == 1) {
-		printf("NO\n");
+	if (m == 0) {
+		if (n == 1) {
+			printf("YES\n0");
+		} else
+		{
+			printf("NO\n");
+		}
 		return 0;
 	}
 
@@ -129,7 +134,12 @@ int main() {
 			}
 		}
 	}
-	printf("YES\n%d", ans);
 
+	if (ans == inf) {
+		printf("NO\n");
+	} else
+	{
+		printf("YES\n%d", ans);
+	}
 	return 0;
 }

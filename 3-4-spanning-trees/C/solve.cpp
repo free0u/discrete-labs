@@ -79,16 +79,10 @@ int main() {
 
 	sort(edges.begin(), edges.end());
 
-	if (m == 0) {
-		if (n == 1) {
-			printf("YES\n0");
-		} else
-		{
-			printf("NO\n");
-		}
+	if (n == 1 && m == 0) {
+		printf("NO\n");
 		return 0;
 	}
-
 
 	DSU dsu(n);
 	vector<bool> in_mst;
@@ -100,6 +94,10 @@ int main() {
 		in_mst.assign(n, false);
 		min_cost = inf;
 		max_cost = -inf;
+
+
+		bool is_mst = false;
+		int cnt_comp = n;
 
 		for (int i = start; i < m; ++i) {
 			from = edges[i].from;
@@ -116,13 +114,12 @@ int main() {
 				}
 				in_mst[from] = true;
 				in_mst[to] = true;
+			
+				cnt_comp--;
 			}
-		}
 
-		bool is_mst = true;
-		for (int i = 0; i < n; ++i) {
-			if (!in_mst[i]) {
-				is_mst = false;
+			if (cnt_comp == 1) {
+				is_mst = true;
 				break;
 			}
 		}
@@ -141,5 +138,6 @@ int main() {
 	{
 		printf("YES\n%d", ans);
 	}
+
 	return 0;
 }

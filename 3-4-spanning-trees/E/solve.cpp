@@ -19,9 +19,14 @@ struct edge {
 	}
 };
 
-typedef vector<edge> graph;
+typedef vector< edge > Edges;
+typedef vector< Edges > Graph;
 
-bool find_mst(graph &g, vector<int> &edges_in_mst) {
+
+const int inf = 1e9 + 31;
+
+
+bool find_mst(Graph &g, Edges &edges, vector<int> &edges_in_mst) {
 	return false;
 }
 
@@ -36,16 +41,20 @@ int main() {
 	
 	int n, m;
 	cin >> n >> m;
-	graph source_edges;
+	Edges source_edges;
+	Graph source_graph(n);
 	int from, to, w;
+	edge e;
 	for (int i = 0; i < m; ++i) {
 		scanf("%d %d %d", &from, &to, &w);
 		from--; to--;
-		source_edges.push_back(edge(from, to, w));
+		e = edge(from, to, w);
+		source_edges.push_back(e);
+		source_graph[from].push_back(e);
 	}
 
 	vector<int> ind;
-	bool ok = find_mst(source_edges, ind);
+	bool ok = find_mst(source_graph, source_edges, ind);
 	if (ok) {
 		long long res = 0;
 		for (int i = 0; i < ind.size(); ++i) {

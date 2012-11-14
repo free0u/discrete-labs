@@ -25,6 +25,34 @@ typedef vector< Edges > Graph;
 
 const int inf = 1e9 + 31;
 
+void edges_to_zero(Graph &g, int start_v) {
+	int n = g.size();
+	vector<int> m(n, inf);
+	int from, to, w;
+
+	// find minimum
+	for (int i = 0; i < n; ++i) {
+		for (int j = 0; j < g[i].size(); ++j) {
+			from = g[i][j].from;
+			to = g[i][j].to;
+			w = g[i][j].w;
+			
+			if (to == start_v) continue;
+			m[to] = min(m[to], w);
+		}
+	}
+
+	// decrease edges
+	for (int i = 0; i < n; ++i) {
+		for (int j = 0; j < g[i].size(); ++j) {
+			from = g[i][j].from;
+			to = g[i][j].to;
+
+			if (to == start_v) continue;
+			g[i][j].w -= m[to];
+		}
+	}
+}
 
 bool find_mst(Graph &g, Edges &edges, vector<int> &edges_in_mst) {
 	return false;

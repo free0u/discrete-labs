@@ -130,7 +130,7 @@ void dfs_tree(Graph &g, vector<bool> &used, int v, vector<pii> &ind, DSU &dsu) {
 		to = g[v][i].to;
 		if (dsu.find(from) != dsu.find(to)) continue; // in different component;
 		w = g[v][i].w;
-		if (!used[to]) {
+		if (!used[to] && w == 0) {
 			ind.push_back(make_pair(v, i));
 			dfs_tree(g, used, to, ind, dsu);
 		}
@@ -326,16 +326,20 @@ bool find_mst(Graph &g, int start_v, vector<pii> &indexes, vector<int> &dsu_ind,
 }
 
 int main() {
-#ifndef HOME_free0u
-	freopen(task_name".in", "r", stdin);
-	freopen(task_name".out", "w", stdout);
-#else
-	freopen("input.txt", "r", stdin);
-	freopen("output.txt", "w", stdout);
-#endif
+//#ifndef HOME_free0u
+//	freopen(task_name".in", "r", stdin);
+//	freopen(task_name".out", "w", stdout);
+//#else
+//	freopen("input.txt", "r", stdin);
+//	freopen("output.txt", "w", stdout);
+//#endif
+	freopen("chinese.in", "r", stdin);
+	freopen("chinese.out", "w", stdout);
+	
+	
 	// TODO delete
-	//string s;
-	//getline(cin, s);
+	string s;
+	getline(cin, s);
 
 	vector<int> dsu_ind;
 	vector<int> order;

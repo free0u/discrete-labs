@@ -63,8 +63,8 @@
     <ClCompile Include="solve.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="input.txt" />
-    <None Include="output.txt" />
+    <None Include="chinese.in" />
+    <None Include="chinese.out" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

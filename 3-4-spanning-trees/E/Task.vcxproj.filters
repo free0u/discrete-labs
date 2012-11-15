@@ -20,10 +20,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="input.txt">
+    <None Include="chinese.in">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="output.txt">
+    <None Include="chinese.in">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="chinese.out">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

@@ -13,6 +13,16 @@ using namespace std;
 
 const long long inf = 1e16 + 31;
 
+struct edge {
+	int to, id, c, f;
+	int x, y;
+	edge() {}
+	edge(int to, int id, int c, int f) : to(to), id(id), c(c), f(f)
+	{
+	}
+
+};
+
 int main() {
 #ifndef HOME_free0u
 	freopen(task_name".in", "r", stdin);
@@ -24,33 +34,38 @@ int main() {
 
 	int n, m;
 	cin >> n >> m;
+	vector< vector<edge> > g(n);
 
-	map< pair<int, int>, int> save_edges;
-	
-	vector< vector<int> > c(n, vector<int> (n));
 	int from, to, w;
 	for (int i = 0; i < m; ++i) {
 		scanf("%d %d %d", &from, &to, &w);
 		--from;
 		--to;
-		c[from][to] = w;
-		save_edges[make_pair(from, to)] = i + 1;
+		g[from].push_back(edge(to, i, w, 0));
+		g[to].push_back(edge(from, i, 0, 0));
+
+		g[from].back().x = to;
+		g[from].back().y = g[to].size() - 1;
+
+		g[to].back().x = from;
+		g[to].back().y = g[from].size() - 1;
 	}
 
-	vector< vector<int> > f(n, vector<int> (n));
 	while (true) {
-
 		// find path
 		vector<int> from(n, -1);
+		vector<int> from_id(n, -1);
 		queue<int> q;
 		q.push(0);
 		while (!q.empty()) {
 			int v = q.front();
 			q.pop();
-			for (int i = 0; i < n; ++i) {
-				if (from[i] == -1 && (c[v][i] - f[v][i]) > 0) {
-					q.push(i);
-					from[i] = v;
+			for (int i = 0; i < g[v].size(); ++i) {
+				int to = g[v][i].to;
+				if (from[to] == -1 && (g[v][i].c - g[v][i].f) > 0) {
+					q.push(to);
+					from[to] = v;
+					from_id[to] = g[v][i].id;
 				}
 			}
 		}
@@ -60,49 +75,74 @@ int main() {
 		}
 
 		long long cf = inf;
+		edge e;
 		for (int cur = n - 1; cur != 0; ) {
 			int prev = from[cur];
-			cf = min(cf, (long long)(c[prev][cur] - f[prev][cur]));
+			
+			for (int i = 0; i < g[prev].size(); ++i) {
+				e = g[prev][i];
+				if (e.to == cur && e.id == from_id[cur]) {
+					cf = min(cf, (long long)(g[prev][i].c - g[prev][i].f));
+					break;
+				}
+			}
 			cur = prev;
 		}
 
 		for (int cur = n - 1; cur != 0; ) {
 			int prev = from[cur];
-			f[prev][cur] += cf;
-			f[cur][prev] = -f[prev][cur];
+			for (int i = 0; i < g[prev].size(); ++i) {
+				e = g[prev][i];
+				if (e.to == cur && e.id == from_id[cur]) {
+					g[prev][i].f += cf;
+					int x = g[prev][i].x;
+					int y = g[prev][i].y;
+					g[x][y].f -= cf;
+					break;
+				}
+			}
 			cur = prev;
 		}
 	}
 	
+	/*long long ans = 0;
+	for (int i = 0; i < g[0].size(); ++i) {
+		ans += g[0][i].f;
+	}
+	cout << ans;*/
+
+
 	vector<int> flow;
 	vector< vector<int> > edges;
 
 	while (true) {
 		vector<int> par(n, -1);
+		vector<int> par_id(n, -1);
 		vector<bool> used(n, false);
 		int cur = 0, next;
 		long long cf = inf;
 		while (true) {
 			used[cur] = true;
 			next = -1;
-			for (int i = 0; i < n; ++i) {
-				if (f[cur][i] > 0) {
-					next = i;
-					cf = min(cf, (long long)f[cur][i]);
+			for (int i = 0; i < g[cur].size(); ++i) {
+				if (g[cur][i].f > 0) {
+					next = g[cur][i].to;
+					cf = min(cf, (long long)g[cur][i].f);
+					par[next] = cur;
+					par_id[next] = g[cur][i].id;
+					cur = next;
 					break;
 				}
 			}
-			if (next == -1) {
+			if (cur == -1) {
 				break;
 			}
-
-			par[next] = cur;
-			cur = next;
 
 			if (cur == n - 1 || used[cur]) {
 				break;
 			}
 		}
+
 		if (next == -1) {
 			break;
 		}
@@ -111,12 +151,21 @@ int main() {
 		edges.push_back(vector<int> ());
 
 		// find min edge
+		edge e;
 		for (; cur != 0; cur = par[cur]) {
 			int prev = par[cur];
-			f[prev][cur] -= cf;
-			f[cur][prev] = -f[prev][cur];
-
-			edges.back().push_back(save_edges[make_pair(prev, cur)]);
+			
+			for (int i = 0; i < g[prev].size(); ++i) {
+				e = g[prev][i];
+				if (e.to == cur && e.id == par_id[cur]) {
+					g[prev][i].f -= cf;
+					int x = g[prev][i].x;
+					int y = g[prev][i].y;
+					g[x][y].f += cf;
+					edges.back().push_back(g[prev][i].id);
+					break;
+				}
+			}
 		}
 	}
 
@@ -125,7 +174,7 @@ int main() {
 		printf("%d ", flow[i]);
 		printf("%d ", edges[i].size());
 		for (int j = edges[i].size() - 1; j >= 0; --j) {
-			printf("%d ", edges[i][j]);
+			printf("%d ", edges[i][j] + 1);
 		}
 		printf("\n");
 	}

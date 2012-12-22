@@ -135,8 +135,9 @@ public class MinCostFlow {
 		int n, m;
 		n = nextInt();
 		m = nextInt();
-		int from, to, cap, cost;
 		List<Edge>[] graph = createGraph(n);
+		int from, to, cap, cost;
+		
 		for (int i = 0; i < m; ++i) {
 			from = nextInt();
 			to = nextInt();

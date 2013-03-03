@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include <map>
 
 using namespace std;
 #define task_name "search4"
@@ -16,16 +17,15 @@ class AC {
 		int prev_leaf;
 		bool leaf;
 		int link;
-		vector<int> next;
-		int p;
+		int next[SZ_ALP];
 		char pch;
-		vector<int> go;
-
-		vector<int> indexes_string;
+		int go[SZ_ALP];
+		int p;
 
 		vertex(int k = SZ_ALP) {
-			next.assign(k, -1);
-			go.assign(k, -1);
+			memset(next, -1, sizeof next);
+			memset(go, 255, sizeof go);
+
 			leaf = false;
 			prev_leaf = -1;
 		}
@@ -34,13 +34,16 @@ class AC {
 
 public:
 	vector<vertex> tree;
+	vector<int> indexes;
 	int sz;
 
-	AC() {
+	AC(int n) {
 		vertex t;
 		t.p = t.link = -1;
-		sz = 0;
 		tree.push_back(t);
+
+		sz = 0;
+		indexes.assign(n, -1);
 	}
 
 	void add_string(string const& s) {
@@ -59,7 +62,7 @@ public:
 			cur = tree[cur].next[c];
 		}
 		tree[cur].leaf = true;
-		tree[cur].indexes_string.push_back(sz);
+		indexes[sz] = cur;
 		++sz;
 	}
 
@@ -133,12 +136,13 @@ int main() {
 	string text;
 	cin >> text;
 
-	AC tree;
+	AC tree(n);
 	for (int i = 0; i < S.size(); ++i) {
 		tree.add_string(S[i]);
 	}
 
-	vector<bool> ans(n, false);
+	vector<int> ans(n, false);
+	vector<bool> cond(tree.tree.size(), false);
 
 	int cur = 0;
 	for (int i = 0; i < text.size(); ++i) {
@@ -148,11 +152,12 @@ int main() {
 		
 		int cur_link = cur;
 		while (true) {
+			if (cond[cur_link]) {
+				break;
+			}
+
 			if (tree.tree[cur_link].leaf) {
-				for (int j = 0; j < tree.tree[cur_link].indexes_string.size(); ++j) {
-					int ind = tree.tree[cur_link].indexes_string[j];
-					ans[ind] = true;
-				}
+				cond[cur_link] = true;
 			}
 
 			if (cur_link == 0) break;
@@ -160,8 +165,8 @@ int main() {
 		}
 	}
 
-	for (int i = 0; i < ans.size(); ++i) {
-		printf("%s\n", ans[i] ? "YES" : "NO");
+	for (int i = 0; i < S.size(); ++i) {
+		printf("%s\n", cond[tree.indexes[i]] ? "YES" : "NO");
 	}
 
 	return 0;

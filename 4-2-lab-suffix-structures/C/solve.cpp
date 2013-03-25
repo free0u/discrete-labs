@@ -1,3 +1,5 @@
+#pragma comment(linker, "/STACK:36777216")
+
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
@@ -15,6 +17,7 @@ class SuffixTree {
 	string alp;
 	int alp_size;
 	Node * root;
+	int len_str;
 
 	struct Node {
 		int depth;
@@ -38,7 +41,7 @@ class SuffixTree {
 	};
 
 	void init() {
-		alp = "abcdefghijklmnopqrstuvwxyz\1\2";
+		alp = "abcdefghijklmnopqrstuvwxyz$&";
 		alp_size = alp.length();
 	}
 
@@ -47,6 +50,7 @@ public:
 	SuffixTree(string const& s) {
 		init();
 
+		len_str =s.length();
 		build(s);
 	}
 
@@ -117,57 +121,37 @@ public:
 		root->suffix_link = NULL;
 	}
 
-	void _dump(Node * cur, int d) {
-		
+	void _dump(Node * cur, int& cnt) {
+		int id = cnt;
 		for (int i = 0; i < cur->children.size(); ++i) {
 			Node * c = cur->children[i];
 			if (c == NULL) continue;
-				for (int i = 0; i < d; ++i) {
-				cout << "  ";
-			}
-			printf("%c: depth = %d; start = %d; end = %d\n", (char)(i + 'a'), c->depth, c->start, c->end);
-			_dump(c, d + 1);
+			if (i == alp_size - 2) continue;
+			int ind_end = c->end;
+			printf("%d %d %d %d\n", id, ++cnt, c->start + 1, ind_end);
+			_dump(c, cnt);
 		}
 	}
 
-	void dump() {
-		_dump(root, 0);
+	void dump(int n) {
+		int cnt = 1;
+		_dump(root, cnt);
 	}
 
+	int _cnt_vertex(Node * cur) {
+		int sum = 0;
+		for (int i = 0; i < cur->children.size(); ++i) {
+			Node * c = cur->children[i];
+			if (c == NULL) continue;
+			if (i == alp_size - 2) continue;
+			sum += _cnt_vertex(c);
+		}
+		return sum + 1;
+	}
 
-
-  int lcsLength;
-  int lcsBeginIndex;
-
-  int _findLCS(Node * node, int i1, int i2) {
-    if (node->start <= i1 && i1 < node->end) {
-      return 1;
-    }
-    if (node->start <= i2 && i2 < node->end) {
-      return 2;
-    }
-    int mask = 0;
-    for (char f = 0; f < alp_size; f++) {
-      if (node->children[f] != NULL) {
-        mask |= _findLCS(node->children[f], i1, i2);
-      }
-    }
-    if (mask == 3) {
-      int curLength = node->depth + node->end - node->start;
-      if (lcsLength < curLength) {
-        lcsLength = curLength;
-        lcsBeginIndex = node->start;
-      }
-    }
-    return mask;
-  }
-
-  int find_lcs(int len_1, int len_2, string const& s) {
-	  int res = _findLCS(root, len_1, len_1 + len_2 + 1);
-		
-	  cout << lcsLength << " === " << s.substr(lcsBeginIndex - 1, lcsLength) << endl;
-	  return res;
-  }
+	int cnt_vertex() {
+		return _cnt_vertex(root);
+	}
 };
 
 
@@ -182,19 +166,14 @@ int main() {
 	freopen("output.txt", "w", stdout);
 #endif
 
-	//string a, b;
-	//cin >> a >> b;
-	//string s = a + '\1' + b + '\2';
-	//SuffixTree t(s);
-	//t.find_lcs(a.length(), b.length(), s);
-
-
 	string s;
 	cin >> s;
 
 	SuffixTree tree(s);
 
-	tree.dump();
+	int n = tree.cnt_vertex();
+	printf("%d %d\n", n, n - 1);
+	tree.dump(s.length());
 
 	return 0;
 }

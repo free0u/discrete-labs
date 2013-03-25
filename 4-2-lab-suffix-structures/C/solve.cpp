@@ -50,6 +50,7 @@ public:
 		build(s);
 	}
 
+
 	void build(string const& s) {
 		int n = s.length();
 		vector<char> a(n);
@@ -66,12 +67,11 @@ public:
 			int cur = a[i + 1];
 			for (; j <= i + 1; j++) {
 				int cur_depth = i - j + 1;
-				
 				if (last_rule != 3) {
 					cn = (cn->suffix_link != NULL ? cn->suffix_link : cn->parent->suffix_link);
 					int k = j + cn->depth;
 					while (cur_depth > 0 && !cn->contains(cur_depth - 1)) {
-						k += cn->start - cn->end;
+						k += cn->end - cn->start;
 						cn = cn->children[a[k]];
 					}
 				}
@@ -81,7 +81,6 @@ public:
 						needs_suffix_link->suffix_link = cn;
 						needs_suffix_link = NULL;
 					}
-
 					if (cn->children[cur] == NULL) {
 						cn->children[cur] = new Node(i + 1, n, cur_depth, cn, alp_size);
 						last_rule = 2;
@@ -90,11 +89,11 @@ public:
 						last_rule = 3;
 						break;
 					}
-				} else 
+				} else
 				{
-					int end = cn->start - cn->depth + cur_depth;
+					int end = cn->start + cur_depth - cn->depth;
 					if (a[end] != cur) {
-						Node * newn = new Node(i + 1, n, cur_depth, cn->parent, alp_size);
+						Node* newn = new Node(cn->start, end, cn->depth, cn->parent, alp_size);
 						newn->children[cur] = new Node(i + 1, n, cur_depth, newn, alp_size);
 						newn->children[a[end]] = cn;
 						cn->parent->children[a[cn->start]] = newn;
@@ -119,12 +118,13 @@ public:
 	}
 
 	void _dump(Node * cur, int d) {
-		for (int i = 0; i < d; ++i) {
-			cout << "  ";
-		}
+		
 		for (int i = 0; i < cur->children.size(); ++i) {
 			Node * c = cur->children[i];
 			if (c == NULL) continue;
+				for (int i = 0; i < d; ++i) {
+				cout << "  ";
+			}
 			printf("%c: depth = %d; start = %d; end = %d\n", (char)(i + 'a'), c->depth, c->start, c->end);
 			_dump(c, d + 1);
 		}
@@ -162,8 +162,11 @@ public:
     return mask;
   }
 
-  int find_lcs(int len_1, int len_2) {
-	  return _findLCS(root, len_1, len_1 + len_2 + 1);
+  int find_lcs(int len_1, int len_2, string const& s) {
+	  int res = _findLCS(root, len_1, len_1 + len_2 + 1);
+		
+	  cout << lcsLength << " === " << s.substr(lcsBeginIndex - 1, lcsLength) << endl;
+	  return res;
   }
 };
 
@@ -179,19 +182,19 @@ int main() {
 	freopen("output.txt", "w", stdout);
 #endif
 
-	string a, b;
-	cin >> a >> b;
-	string s = a + '\1' + b + '\2';
-	SuffixTree t(s);
-	t.find_lcs(a.length(), b.length());
+	//string a, b;
+	//cin >> a >> b;
+	//string s = a + '\1' + b + '\2';
+	//SuffixTree t(s);
+	//t.find_lcs(a.length(), b.length(), s);
 
 
-	//string s;
-	//cin >> s;
+	string s;
+	cin >> s;
 
-	//SuffixTree tree(s);
+	SuffixTree tree(s);
 
-	//tree.dump();
+	tree.dump();
 
 	return 0;
 }

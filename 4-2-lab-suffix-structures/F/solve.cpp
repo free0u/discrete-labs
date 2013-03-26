@@ -141,11 +141,7 @@ public:
 		for (char f = 0; f < alp_size; ++f) {
 			if (cur->children[f] != NULL) {
 				long long d = (cur->children[f]->end - cur->children[f]->start);
-				if (cur->children[f]->end == len_str) {
-					//--d;
-				}
 				sum += d;
-
 				_cnt_str(cur->children[f]);
 			}
 		}

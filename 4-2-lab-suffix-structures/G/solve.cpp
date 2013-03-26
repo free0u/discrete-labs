@@ -9,7 +9,7 @@
 #include <algorithm>
 
 using namespace std;
-#define task_name "refrain"
+#define task_name "common"
 
 class SuffixTree {
 	class Node;
@@ -27,7 +27,7 @@ class SuffixTree {
 		Node * parent;
 		Node * suffix_link;
 
-		int cnt_substring;
+		char type_suffix;
 
 		Node(int _start, int _end, int _depth, Node * _parent, int _alp_size) {
 			children.resize(_alp_size);
@@ -125,83 +125,75 @@ public:
 		root->suffix_link = NULL;
 	}
 
+	int lcs_len, lcs_begin;
+
+	int calculate_type(Node * cur, int const& len1, int const& len2) {
+		if (cur->start <= len1 && len1 < cur->end) {
+			cur->type_suffix = 1;
+			return 1;
+		}
+		if (cur->start <= len2 && len2 < cur->end) {
+			cur->type_suffix = 2;
+			return 2;
+		}
+		int mask = 0;
+		for (char f = 0; f < alp_size; ++f) {
+			if (cur->children[f] != NULL) {
+				mask |= calculate_type(cur->children[f], len1, len2);
+			}
+		}
+
+		if (mask == 3) {
+			int cur_len = cur->depth + cur->end - cur->start;
+			if (cur_len > lcs_len) {
+				lcs_len = cur_len;
+			}
+		}
+
+		cur->type_suffix = mask;
+		return mask;
+	}
+
 	void _dump(Node * cur, int d) {
 		for (char f = 0; f < alp_size; ++f) {
 			if (cur->children[f] != NULL) {
 				for (int i = 0; i < d; ++i) cout << "  ";
-				printf("%c: %d %d | %d\n", alp[f], cur->children[f]->start, cur->children[f]->end - 1, cur->children[f]->cnt_substring);
+				printf("%c: %d %d | %d\n", alp[f], cur->children[f]->start, cur->children[f]->end, cur->children[f]->type_suffix);
 				_dump(cur->children[f], d + 1);
 			}
 		}
 	}
 	
-	long long ref_len, ref_start, ref_cnt;
-	Node * end_ref;
-	void calculate_cnt(Node * cur) {
-		if (cur->end == len_str) {
-			cur->cnt_substring = 1;
-			return;
-		}
-
-		int sum = 0;
-		for (char f = 0; f < alp_size; ++f) {
-			Node * c = cur->children[f];
-			if (c == NULL) continue;
-			calculate_cnt(c);
-			sum += (c->cnt_substring);
-		}
-		cur->cnt_substring = sum;
-	}
-
-	void _find_refrain(Node * cur) {
+	void _print_lcs(Node * cur, int cur_depth) {
 		if (cur == NULL) return;
+		if (cur->type_suffix == 3 && cur_depth == lcs_len) {
+			vector<string> ss;
+			while (cur != NULL) {
+				ss.push_back(str.substr(cur->start, cur->end - cur->start));
+				cur = cur->parent;
+			}
+			for (int i = ss.size() - 1; i >= 0; --i) {
+				cout << ss[i];
+			}
+			exit(0);
+		}
+
 		for (char f = 0; f < alp_size; ++f) {
-			Node * c = cur->children[f];
-			if (c == NULL) continue;
-
-			long long cur_len = c->depth;
-			cur_len = cur_len + c->end - c->start;
-			if (c->end == len_str) {
-				cur_len--;
+			if (cur->children[f] != NULL) {
+				_print_lcs(cur->children[f], cur_depth + cur->children[f]->end - cur->children[f]->start);
 			}
-			long long r = cur_len * c->cnt_substring;
-
-			long long r_old = ref_len * ref_cnt;
-
-			if (r > r_old) {
-				ref_len = cur_len;
-				ref_cnt = c->cnt_substring;
-				end_ref = c;
-			}
-
-			_find_refrain(c);
 		}
 	}
 
-	int find_refrain() {
-		ref_len = ref_start = ref_cnt = 0;
-		
-		calculate_cnt(root);
-		_find_refrain(root);
+	int find_lcs(int len1, int len2, string const& s) {
+		lcs_len = lcs_begin = 0;
+		calculate_type(root, len1, len1 + len2 + 1);
 
-		cout << ref_len * ref_cnt << endl;
-		cout << ref_len << endl;
+		//cout << lcs_len << endl;
+		//_dump(root, 0);
 		
-		vector<string> ss;
-		while (end_ref) {
-			int ind_end = end_ref->end;
-			if (ind_end == len_str) {
-				--ind_end;
-			}
-			ss.push_back(str.substr(end_ref->start, ind_end - end_ref->start));
-			end_ref = end_ref->parent;
-		}
-		for (int i = ss.size() - 1; i >= 0; --i) {
-			for (int j = 0; j < ss[i].size(); ++j) {
-				printf("%d ", ss[i][j] - 'a' + 1);
-			}
-		}
-
+		
+		_print_lcs(root, 0);
 		return 0;
 	}
 };
@@ -218,18 +210,13 @@ int main() {
 	freopen("output.txt", "w", stdout);
 #endif
 
-	int n, m, x;
-	cin >> n >> m;
-	
-	string s = "";
-	for (int i = 0; i < n; ++i) {
-		scanf("%d", &x);
-		s += (char)('a' + x - 1);
-	}
+	string a, b;
+	cin >> a >> b;
+	string s = a + '$' + b + '&';
 
-	s += '$';
 	SuffixTree t(s);
 
-	t.find_refrain();
+	t.find_lcs(a.length(), b.length(), s);
+
 	return 0;
 }

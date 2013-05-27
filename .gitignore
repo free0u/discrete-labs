@@ -1,5 +1,6 @@
 *.*
 
+!Makefile
 !solve.cpp
 !Task.vcxproj.filters
 !Task.sln

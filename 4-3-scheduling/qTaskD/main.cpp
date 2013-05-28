@@ -63,10 +63,20 @@ int main() {
         }
     }
 
+    vector<task> complete(s.begin(), s.end());
+    sort(complete.begin(), complete.end());
+
     vector<long long> ans(n, -1);
-    for (set<task, my_compare>::iterator it = s.begin(); it != s.end(); it++) {
-        ans[it->id] = it->start_time;
+    time = 0;
+    for (size_t i = 0; i < complete.size(); ++i) {
+        ans[complete[i].id] = time;
+        time += complete[i].p;
     }
+
+//    vector<long long> ans(n, -1);
+//    for (set<task, my_compare>::iterator it = s.begin(); it != s.end(); it++) {
+//        ans[it->id] = it->start_time;
+//    }
 
     cout << s.size() << endl;
     for (size_t i = 0; i < ans.size(); ++i) {

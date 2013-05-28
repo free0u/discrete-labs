@@ -47,7 +47,7 @@ int main() {
     vector<item> head, tail;
 
     for (int i = 0; i < n; ++i) {
-        if (data[i].x <= data[i].y) {
+        if (data[i].x < data[i].y) {
             head.push_back(data[i]);
         } else
         {

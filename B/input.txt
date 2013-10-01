@@ -1,3 +1,9 @@
+abaa
+1 2 1
+1
+1 1 a
+1 1 b
+
 acacabcacabcabcabcacabcacacab
 3 4 1
 2

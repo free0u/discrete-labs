@@ -51,7 +51,7 @@ int main() {
     }
 
     for (size_t i = 0; i < T.size(); ++i) {
-        if (R1[T[i]]) {
+        if (T[i] && R1[i]) {
             cout << "Accepts";
             return 0;
         }

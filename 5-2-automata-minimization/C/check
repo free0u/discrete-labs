@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+
+while true; do
+    ./gen > input.txt
+    ./main
+    cat output.txt >> input.txt
+    ./taskb
+    read line < "output.txt"
+    if [ "$line" == "NO" ]; then
+        exit
+    fi
+done

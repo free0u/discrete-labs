@@ -1,0 +1,53 @@
+14 S
+S -> aA
+S -> bB
+A -> bB
+B -> aA
+A -> aC
+B -> bD
+
+
+8
+aa
+bb
+ababab
+babab
+a
+b
+abababaabababa
+babababbabba
+
+
+
+4 B
+B -> aB
+B -> bB
+B -> a
+B -> c
+9
+aa
+aba
+abba
+abbba
+a
+ababa
+ac
+abc
+abbc
+
+
+2 X
+X -> aS
+S -> b
+4
+ab
+aa
+ba
+bb
+
+2 S
+S -> aA
+A -> b
+2
+ab
+aa

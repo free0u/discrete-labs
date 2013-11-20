@@ -1,0 +1,8 @@
+7 S
+S -> AB
+S -> C
+A -> a
+B -> b
+T -> c
+B -> EaE
+E ->

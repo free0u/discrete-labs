@@ -1,0 +1,24 @@
+3 S
+S -> SS
+S -> aSb
+S ->
+ab
+
+2 S
+S -> aA
+A -> b
+ab
+aa
+
+
+4 S
+S -> AB
+S -> AA
+A -> a
+B -> b
+bb
+
+2 S
+S -> aA
+A -> b
+ab

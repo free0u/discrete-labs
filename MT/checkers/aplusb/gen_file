@@ -1,0 +1,1 @@
+(cat head.cpp && cat aplusb.out | sed 's/^/    ans.push_back("/' | sed 's/$/");/' && cat tail.cpp ) > solve.cpp

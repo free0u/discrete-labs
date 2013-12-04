@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+
+for i in *.in; do
+    java -jar Check.jar Check $i aplusb.out trash
+done;

@@ -1,0 +1,2 @@
+#!/bin/bash
+java -Xmx256M -Xss64M -cp ./testlib4j.jar:../testlib4j.jar:../Check.jar:./Check.jar ru.ifmo.testlib.CheckerFramework Check $@

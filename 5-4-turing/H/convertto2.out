@@ -1,0 +1,85 @@
+start: s
+accept: hole 
+reject: rj
+blank: e
+
+s 0 -> add_s 0 <
+s 1 -> add_s 1 <
+s 2 -> add_s 2 <
+
+add_s e -> begin s >
+
+begin 0 -> q0 0 >
+q0 e -> q0e e ^
+q0 0 -> q00 0 <
+q0 1 -> q01 1 <
+q0 2 -> q02 2 <
+
+begin 1 -> q1 1 >
+q1 e -> q1e e ^
+q1 0 -> q10 0 <
+q1 1 -> q11 1 <
+q1 2 -> q12 2 <
+
+begin 2 -> q2 2 >
+q2 e -> q2e e ^
+#q2 0 -> q20 0 ^
+#q2 1 -> q21 1 ^
+#q2 2 -> q22 2 ^
+
+q00 0 -> q00r e >
+q00r 0 -> add_n_0 0 ^
+
+q01 0 -> q01r e >
+q01r 1 -> add_n_0 1 ^ 
+
+q02 0 -> q02r e >
+q02r 2 -> add_n_1 0 >
+
+q10 1 -> q10r e >
+q10r 0 -> add_n_1 1 ^
+
+q11 1 -> q11r e >
+q11r 1 -> add_n_2 0 ^ 
+
+q12 1 -> q12r e >
+q12r 2 -> add_n_2 1 >
+
+q0e e -> hole e ^
+q1e e -> hole e ^
+
+add_n_0 0 -> add_n_0 0 >
+add_n_0 1 -> add_n_0 1 >
+add_n_0 2 -> add_n_0 2 >
+add_n_0 e -> add_n_0_n e >
+add_n_0_n 0 -> add_n_0_n 0 >
+add_n_0_n 1 -> add_n_0_n 1 >
+add_n_0_n 2 -> add_n_0_n 2 >
+add_n_0_n e -> n_back 0 ^
+
+add_n_1 0 -> add_n_1 0 >
+add_n_1 1 -> add_n_1 1 >
+add_n_1 2 -> add_n_1 2 >
+add_n_1 e -> add_n_1_n e >
+add_n_1_n 0 -> add_n_1_n 0 >
+add_n_1_n 1 -> add_n_1_n 1 >
+add_n_1_n 2 -> add_n_1_n 2 >
+add_n_1_n e -> n_back 1 ^
+
+add_n_2 0 -> add_n_2 0 >
+add_n_2 1 -> add_n_2 1 >
+add_n_2 2 -> add_n_2 2 >
+add_n_2 e -> add_n_2_n e >
+add_n_2_n 0 -> add_n_2_n 0 >
+add_n_2_n 1 -> add_n_2_n 1 >
+add_n_2_n 2 -> add_n_2_n 2 >
+add_n_2_n e -> n_back 2 ^
+
+n_back 0 -> n_back 0 <
+n_back 1 -> n_back 1 <
+n_back 2 -> n_back 2 <
+n_back e -> n_back_c e <
+n_back_c 0 -> n_back_c 0 <
+n_back_c 1 -> n_back_c 1 <
+n_back_c 2 -> n_back_c 2 <
+n_back_c e -> begin e >

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+name=`find -name *.out`
+touch trash
+
+for i in ./tests/*.in; do
+    java -jar ./tests/Check.jar Check $i $name trash
+done;

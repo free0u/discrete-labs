@@ -1,85 +1,75 @@
 start: s
-accept: hole 
+accept: ac
 reject: rj
 blank: e
 
-s 0 -> add_s 0 <
-s 1 -> add_s 1 <
-s 2 -> add_s 2 <
+s 0 -> add_ 0 <
+s 1 -> add_ 1 <
+s 2 -> add_ 2 <
+add_ e -> begin _ >
 
-add_s e -> begin s >
+begin 0 -> even 0 > 
+begin 1 -> odd 1 >
+begin 2 -> even 2 >
 
-begin 0 -> q0 0 >
-q0 e -> q0e e ^
-q0 0 -> q00 0 <
-q0 1 -> q01 1 <
-q0 2 -> q02 2 <
+even 0 -> even 0 >
+even 1 -> odd 1 >
+even 2 -> even 2 >
+even e -> push0 e <
 
-begin 1 -> q1 1 >
-q1 e -> q1e e ^
-q1 0 -> q10 0 <
-q1 1 -> q11 1 <
-q1 2 -> q12 2 <
+odd 0 -> odd 0 >
+odd 1 -> even 1 >
+odd 2 -> odd 2 >
+odd e -> push1 e <
 
-begin 2 -> q2 2 >
-q2 e -> q2e e ^
-#q2 0 -> q20 0 ^
-#q2 1 -> q21 1 ^
-#q2 2 -> q22 2 ^
+push0 0 -> push0 0 <
+push0 1 -> push0 1 <
+push0 2 -> push0 2 <
+push0 _ -> push0 _ <
+push0 e -> to_begin 0 >
 
-q00 0 -> q00r e >
-q00r 0 -> add_n_0 0 ^
+push1 0 -> push1 0 <
+push1 1 -> push1 1 <
+push1 2 -> push1 2 <
+push1 _ -> push1 _ <
+push1 e -> to_begin 1 >
 
-q01 0 -> q01r e >
-q01r 1 -> add_n_0 1 ^ 
+to_begin 0 -> to_begin 0 >
+to_begin 1 -> to_begin 1 >
+to_begin 2 -> to_begin 2 >
+to_begin _ -> q _ >
 
-q02 0 -> q02r e >
-q02r 2 -> add_n_1 0 >
+q 0 -> q 0 >
+q 1 -> qc 0 >
+q 2 -> q 1 >
+q e -> check e <
 
-q10 1 -> q10r e >
-q10r 0 -> add_n_1 1 ^
+qc 0 -> qc 1 >
+qc 1 -> q 2 >
+qc 2 -> qc 2 >
+qc e -> check e <
 
-q11 1 -> q11r e >
-q11r 1 -> add_n_2 0 ^ 
+check 0 -> check 0 <
+check 1 -> cont 1 <
+check 2 -> cont 2 <
+check _ -> output _ ^
 
-q12 1 -> q12r e >
-q12r 2 -> add_n_2 1 >
+cont 0 -> cont 0 <
+cont 1 -> cont 1 <
+cont 2 -> cont 2 <
+cont _ -> begin _ >
 
-q0e e -> hole e ^
-q1e e -> hole e ^
+output _ -> output e >
+output 0 -> output e >
+output e -> jmp_num e ^
 
-add_n_0 0 -> add_n_0 0 >
-add_n_0 1 -> add_n_0 1 >
-add_n_0 2 -> add_n_0 2 >
-add_n_0 e -> add_n_0_n e >
-add_n_0_n 0 -> add_n_0_n 0 >
-add_n_0_n 1 -> add_n_0_n 1 >
-add_n_0_n 2 -> add_n_0_n 2 >
-add_n_0_n e -> n_back 0 ^
+jmp_num 0 -> jmp_begin 0 <
+jmp_num 1 -> jmp_begin 1 <
+jmp_num 2 -> jmp_begin 2 <
+jmp_num e -> jmp_num e <
 
-add_n_1 0 -> add_n_1 0 >
-add_n_1 1 -> add_n_1 1 >
-add_n_1 2 -> add_n_1 2 >
-add_n_1 e -> add_n_1_n e >
-add_n_1_n 0 -> add_n_1_n 0 >
-add_n_1_n 1 -> add_n_1_n 1 >
-add_n_1_n 2 -> add_n_1_n 2 >
-add_n_1_n e -> n_back 1 ^
+jmp_begin 0 -> jmp_begin 0 <
+jmp_begin 1 -> jmp_begin 1 <
+jmp_begin 2 -> jmp_begin 2 <
+jmp_begin e -> ac e >
 
-add_n_2 0 -> add_n_2 0 >
-add_n_2 1 -> add_n_2 1 >
-add_n_2 2 -> add_n_2 2 >
-add_n_2 e -> add_n_2_n e >
-add_n_2_n 0 -> add_n_2_n 0 >
-add_n_2_n 1 -> add_n_2_n 1 >
-add_n_2_n 2 -> add_n_2_n 2 >
-add_n_2_n e -> n_back 2 ^
-
-n_back 0 -> n_back 0 <
-n_back 1 -> n_back 1 <
-n_back 2 -> n_back 2 <
-n_back e -> n_back_c e <
-n_back_c 0 -> n_back_c 0 <
-n_back_c 1 -> n_back_c 1 <
-n_back_c 2 -> n_back_c 2 <
-n_back_c e -> begin e >

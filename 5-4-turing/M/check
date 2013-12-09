@@ -1,0 +1,11 @@
+#!/bin/bash
+
+touch log.txt
+rm log.txt
+touch log.txt
+
+for i in ./tests/*.in; do
+    echo $i
+    java Check2 sorting.txt $i >> log.txt
+#    java Check2 sorting.txt $i
+done;

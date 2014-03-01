@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "=== all file ==="
+cat tests
+echo "=== improved lines ==="
+cat tests | perl ans.pl

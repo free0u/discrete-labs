@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "=== input ==="
+cat tests
+echo "=== output ==="
+cat tests | perl ans.pl

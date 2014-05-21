@@ -1,0 +1,36 @@
+fac :: Integer -> Integer -> Integer
+fac 0 = 1
+fac n = n * fac(n - 1)
+
+
+sum :: Integer -> Integer -> Integer
+sum x y = x + y
+
+fib :: Integer -> Integer
+fib 0 = 1
+fib 1 = 1
+fib i = fib(i - 1) + fib(i - 2)
+
+get_ten :: Integer
+get_ten = 10
+
+dec :: Integer -> Integer
+dec 0 = 0
+dec n = (n - 1)
+
+xor :: Integer -> Integer -> Integer
+xor 0 0 = 0
+xor 0 1 = 1
+xor 1 0 = 1
+xor 1 1 = 0
+xor a b = error()
+
+gcd :: Integer -> Integer -> Integer
+gcd a 0 = a
+gcd a b = gcd(b, mod(a, b))
+
+sum_rec :: Integer -> Integer -> Integer
+sum x 0 = x
+sum x y = sum(x, y - 1) + 1
+
+

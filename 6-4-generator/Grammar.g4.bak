@@ -1,0 +1,41 @@
+grammar Grammar;
+
+options {
+    language = Java;
+}
+
+@header{
+
+}
+
+@members{
+    //Tree root;
+}
+
+
+start
+    : 'var ' blocks {root = new Tree("var", $blocks.tree); System.out.println(root); }
+    ;
+
+blocks  returns[Tree tree = new Tree("blocks")]
+    : (block {$tree.addChild($block.tree); })+
+    ;
+
+block returns[Tree tree]
+    : vars ':' type ';' { $tree = new Tree("block", $vars.tree, new Tree(":"), $type.tree, new Tree(";"));  }
+    ;
+
+vars returns[Tree tree = new Tree("vars")]
+    : var { $tree.addChild(new Tree($var.text)); } (',' var { $tree.addChild(new Tree($var.text)); })*
+    ;
+
+var
+    : ID
+    ;
+
+type returns[Tree tree]
+    : ('int' | 'bool') { $tree = new Tree("type", new Tree($type.text)); }
+    ;
+
+ID : [a-z]+;
+INT : [0-9]+;

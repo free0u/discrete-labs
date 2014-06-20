@@ -1,0 +1,21 @@
+header{}
+members{Tree root;}
+
+START: 'v' 'a' 'r' ' ' GROUPS { root = new Tree("var", C0.tree); System.out.println(root);  };
+
+GROUPS[Tree tree]: GROUP GROUPSP {$tree = new Tree("GROUPS", C0.tree, C1.tree); };
+
+GROUPSP[Tree tree]: GROUP GROUPSP { $tree = new Tree("GROUPSP", C0.tree, C1.tree); } | eps { $tree = new Tree("eps"); };
+
+GROUP[Tree tree]: VARS ':' ID ';' { $tree = new Tree("GROUP", C0.tree, new Tree(":"), new Tree(C1.text), new Tree(";")); };
+
+VARS[Tree tree]: ID VARSP { $tree = new Tree("VARS", new Tree(C0.text), C1.tree); };
+
+VARSP[Tree tree]: ',' ID VARSP { $tree = new Tree("VARSP", new Tree(","), new Tree(C0.text), C1.tree); } | eps { $tree = new Tree("eps"); };
+
+
+ID: CHAR ID | eps;
+
+UPPER_CHAR: 'A'|'B'|'C'|'D'|'E'|'F'|'G'|'H'|'I'|'J'|'K'|'L'|'M'|'N'|'O'|'P'|'Q'|'R'|'S'|'T'|'U'|'V'|'W'|'X'|'Y'|'Z';
+LOWER_CHAR: 'a'|'b'|'c'|'d'|'e'|'f'|'g'|'h'|'i'|'j'|'k'|'l'|'m'|'n'|'o'|'p'|'q'|'r'|'s'|'t'|'u'|'v'|'w'|'x'|'y'|'z';
+CHAR: LOWER_CHAR | UPPER_CHAR;
